@@ -10,3 +10,16 @@ button, input {
     top: 40px;
     right: 40px;
 }
+
+.admin__content {
+    margin: 0 auto;
+    padding: 30px 15px;
+    max-width: 1230px;
+}
+
+.admin__heading {
+    margin-bottom: 40px;
+    text-align: center;
+    color: #8B7969;
+}
+

@@ -38,7 +38,6 @@ class ContactController extends Controller
         } else {
             $category = 5;
         }
-        
 
         $gender = $request->input('gender');
         if ($gender == '男性') {
@@ -60,30 +59,58 @@ class ContactController extends Controller
     }
     }
 
+    public function display(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $items = Contact::Paginate(7);
+        foreach ($items as &$item){
+            if ($item['gender'] == 1) {
+                $item['gender'] = '男性';
+            } else if ($item['gender'] == 2) {
+                $item['gender'] = "女性";
+            } else {
+                $item['gender'] = "その他";
+            }
+        }
 
+        if(!empty($keyword))
+        {
+            $items->where('email', 'like', '%'.$keyword.'%');
+            return view('admin', ['items' => $items]);
+        } else
+        {
+        return view('admin', ['items' => $items]);
+        }
+    }
 
-
-
-
-    // public function index2()
+    // public function display()
     // {
-    //     return view('login');
+    //     // $items = Contact::get();
+    //     $items = Contact::Paginate(7);
+    //     foreach ($items as &$item) {
+    //         if ($item['gender'] == 1) {
+    //             $item['gender'] = '男性';
+    //         } else if ($item['gender'] == 2) {
+    //             $item['gender'] = "女性";
+    //         } else {
+    //             $item['gender'] = "その他";
+    //         }
+    //     }
+    //     return view('admin', ['items' => $items]);
     // }
 
-    // public function index3()
+    // public function find()
     // {
-    //     return view('register');
+    //     return view('admin', ['input' => '']);
     // }
-
-    // // public function index4()
-    // // {
-    // //     return view('confirm');
-    // // }
-
-    // public function index5()
+    // public function search(Request $request)
     // {
-    //     return view('admin');
+    //     $item = Contact::where('email', 'LIKE', "%{$request->input}%")->all();
+    //     $param = [
+    //         'input' => $request->input,
+    //         'items' => $item
+    //     ];
+    //     return view('admin', $param);
     // }
-
 
 }
