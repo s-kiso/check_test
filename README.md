@@ -23,6 +23,8 @@
 </ul>
 
 <h3>ER図</h3>
+![check_test drawio](https://github.com/user-attachments/assets/ecb2229b-a3dc-4401-9641-75df563e2573)
+
 
 <h3>URL</h3>
 <ul>
@@ -33,5 +35,4 @@
 <h3>備考</h3>
 <ul>
   <li>http://localhost/admin の機能がほぼできていません</li>
-  <li>ER図も作成できていません</li>
 </ul>
