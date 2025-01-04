@@ -1,0 +1,12 @@
+button, input {
+    font-family: inherit;
+}
+
+.header__button {
+    border: 1px solid;
+    border-color: #D9C6B5;
+    color: #D9C6B5;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+}

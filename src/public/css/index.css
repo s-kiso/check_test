@@ -1,0 +1,128 @@
+button,input,select {
+    font-family: inherit;
+}
+
+.contact-form__content {
+    margin: 0 auto;
+    padding: 30px 15px;
+    max-width: 1230px;
+}
+
+.contact-form__heading {
+    margin-bottom: 40px;
+    text-align: center;
+    color: #8B7969;
+}
+
+.form {
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+}
+
+.form__group {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.form__group-title {
+    width: 200px;
+    text-align: left;
+}
+
+.form__label--item {
+    color: #8B7969;
+}
+
+.form__label--required {
+    margin-left: 5px;
+    padding: 4px 6px;
+    border-radius: 3px;
+    color: #FF9494;
+}
+
+.form__input--text input {
+    padding: 10px;
+    width: 600px;
+    height: 40px;
+    background-color: #F4F4F4;
+    color: #8B7969;
+    border: none;
+    appearance: none;
+}
+
+.form__input--textarea input {
+    padding: 10px;
+    width: 600px;
+    height: 180px;
+    background-color: #F4F4F4;
+    color: #8B7969;
+    border: none;
+    /* vertical-align: top; */
+    appearance: none;
+}
+
+.form__input--text-name input {
+    padding: 10px;
+    width: 300px;
+    height: 40px;
+    background-color: #F4F4F4;
+    color: #8B7969;
+    border: none;
+    appearance: none;
+}
+
+.form__input--radio label {
+    color: #8B7969;
+    padding-right: 20px;
+}
+
+.form__input--text-tel input {
+    padding: 10px;
+    width: 150px;
+    height: 40px;
+    background-color: #F4F4F4;
+    color: #8B7969;
+    border: none;
+    appearance: none;
+}
+
+.form__input--text-hyphen {
+    color: #8B7969;
+    padding: 10px;
+}
+
+.form__input--select select {
+    padding: 10px;
+    width: 300px;
+    height: 40px;
+    background-color: #F4F4F4;
+    color: #8B7969;
+    border: none;
+}
+
+::placeholder {
+    color: #BEB1A6;
+}
+
+.form__button {
+    margin-top: 30px;
+}
+
+.form__button-submit {
+    padding: 10px 40px;
+    width: 150px;
+    height: 50px;
+    border: none;
+    background-color: #82756A;
+    color: #ffffff;
+}
+
+.form__error {
+    color: #ff0000;
+    background-color: #e0dbd8;
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-start;
+}
