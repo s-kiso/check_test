@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
@@ -16,17 +17,17 @@ class ContactController extends Controller
 
     public function confirm(ContactRequest $request)
     {
+        $request->flash();
         $contact = $request->only(['last_name', 'first_name', 'gender', 'email', 'tel1', 'tel2', 'tel3', 'address', 'building', 'content', 'detail']);
         return view('confirm', ['contact' => $contact]);
     }
 
+
+
     public function store(Request $request){
 
-        if($request->input('back') == ('back')){
-            return redirect('/')->withInput();
-        } else{
-
-        $category = $request->input('content');
+        // oldを使う際に困るためvalue=1,2,...とせずに言葉で取得し、ここでif文を用いて処理したがこれでよいか
+        $category = old('content');
         if ($category == '商品のお届けについて') {
             $category = 1;
         } else if ($category == '商品の交換について') {
@@ -39,7 +40,7 @@ class ContactController extends Controller
             $category = 5;
         }
 
-        $gender = $request->input('gender');
+        $gender = old('gender');
         if ($gender == '男性') {
             $gender=1;
         }else if($gender == '女性'){
@@ -48,22 +49,23 @@ class ContactController extends Controller
             $gender=3;
         }
 
-        $building = $request->input('building');
+        $tel = old('tel1').old('tel2').old('tel3');
+
+        // buildingが値なしだとエラーが出るため"null"にする処置を施したがほかに対処法はあるか
+        $building = old('building');
         if ($building == '') {
             $building='null';
         }
 
-        $contact = ($request->only(['last_name','first_name']) +['category_id'=>$category]+ ["gender"=> $gender] + $request->only(['email', 'tel', 'address']) + ["building"=>$building]+ $request->only(['detail']));
+        $contact = ['last_name'=>old('last_name')]+['first_name'=>old('first_name')] +['category_id'=>$category]+ ["gender"=> $gender] + ['email'=>old('email')] + ['tel' => $tel] + ['address' => old('address')] + ["building"=>$building]+ ['detail' => old('detail')];
         Contact::create($contact);
         return view('thanks');
     }
-    }
 
-    public function display(Request $request)
+    public function display()
     {
-        $keyword = $request->input('keyword');
         $items = Contact::Paginate(7);
-        foreach ($items as &$item){
+        foreach ($items as $item){
             if ($item['gender'] == 1) {
                 $item['gender'] = '男性';
             } else if ($item['gender'] == 2) {
@@ -73,44 +75,61 @@ class ContactController extends Controller
             }
         }
 
-        if(!empty($keyword))
-        {
-            $items->where('email', 'like', '%'.$keyword.'%');
-            return view('admin', ['items' => $items]);
-        } else
-        {
-        return view('admin', ['items' => $items]);
-        }
+        $categories_list = Category::all();
+        return view('admin', ['items' => $items, $categories_list]);
     }
 
-    // public function display()
-    // {
-    //     // $items = Contact::get();
-    //     $items = Contact::Paginate(7);
-    //     foreach ($items as &$item) {
-    //         if ($item['gender'] == 1) {
-    //             $item['gender'] = '男性';
-    //         } else if ($item['gender'] == 2) {
-    //             $item['gender'] = "女性";
-    //         } else {
-    //             $item['gender'] = "その他";
-    //         }
-    //     }
-    //     return view('admin', ['items' => $items]);
-    // }
 
-    // public function find()
-    // {
-    //     return view('admin', ['input' => '']);
-    // }
-    // public function search(Request $request)
-    // {
-    //     $item = Contact::where('email', 'LIKE', "%{$request->input}%")->all();
-    //     $param = [
-    //         'input' => $request->input,
-    //         'items' => $item
-    //     ];
-    //     return view('admin', $param);
-    // }
+    public function search(Request $request)
+    {
+        $request->flash();
+        $name_email = $request->input('name_email');
+        $gender = $request->input('gender');
+        $content = $request->input('content');
+        $date = $request->input('date');
 
+        $query = Contact::query();
+
+        // 始めこちらで書いていたが、名前で検索した際にgenderの条件が反映されないのはなぜか
+        // if (!empty($name_email)) {
+        //     $query->where(DB::raw('CONCAT(last_name, first_name)'), 'like', "%$name_email%")->orWhere('email', 'LIKE', "%$name_email%");
+        // }
+
+        if (!empty($name_email)) {
+            $query->where(function($q) use($name_email){
+                $q->where(DB::raw('CONCAT(last_name, first_name)'), 'like', "%$name_email%")->orWhere('email', 'LIKE', "%$name_email%");
+            });
+        }
+
+        if (!empty($gender)) {
+            $query->where('gender',$gender);
+        }
+
+        if (!empty($content)) {
+            $query->where('category_id', $content);
+        }
+
+        if (!empty($date)) {
+            $query->whereDate('created_at', $date);
+        }
+
+        // 2ページ目以降を開いていて検索をかけた際、1ページ目に飛ばすことができずそのページが表示される（1ページ分しかデータがないのに2ページ目以降が表示されるため、何も現れない）現象が起きるがどうすればよいか
+        $items = $query->paginate(7);
+
+        foreach ($items as $item) {
+            if ($item['gender'] == 1) {
+                $item['gender'] = '男性';
+            } else if ($item['gender'] == 2) {
+                $item['gender'] = "女性";
+            } else {
+                $item['gender'] = "その他";
+            }
+        }
+
+        // モーダルウインドウのやり方が全体的によくわからないです
+
+        $categories_list = Category::all();
+        return view('admin', ['items' => $items, $categories_list]);
+    }
 }
+

@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::get('/', [ContactController::class, 'index']);
 Route::post('/confirm', [ContactController::class, 'confirm']);
-Route::post('/', [ContactController::class, 'store']);
+Route::get('/thanks', [ContactController::class, 'store']);
 
 // Route::get('/', [AuthController::class, 'admin']);
 
@@ -34,4 +34,4 @@ Route::get('/admin', [ContactController::class, 'display']);
 
 
 // Route::get('/admin', [ContactController::class, 'find']);
-// Route::post('/admin', [ContactController::class, 'search']);
+Route::post('/admin', [ContactController::class, 'search']);

@@ -29,37 +29,34 @@
 <div class="admin__content">
     <div class="admin__heading">
         <h2>Admin</h2>
-        <!-- <p>a</p>
-         <table>
-            <tr>
-                <th>お名前</th>
-                <th>性別</th>
-                <th>メールアドレス</th>
-                <th>お問い合わせの種類</th>
-            </tr>
-            @foreach ($items as $item)
-        <tr>
-            <td> {{$item->last_name}} </td>
-            <td> {{$item->gender}} </td>
-            <td> {{$item->email}} </td>
-            <td> {{$item->category_id}} </td>
-        </tr>
-        @endforeach -->
-        <!-- </table>  -->
-
     </div>
-    <!-- <form action="find" method="POST">
+
+
+    {{$items->links()}}
+
+    <form action="" method="POST">
         @csrf
-        <input type="text" name="input" value="{{$input ?? ''}}">
-        <input type="submit" value="見つける">
+        <input type="text" name="name_email" value="{{old('name_email') }}" placeholder="名前やメールアドレスを入力してください">
+        <select name="gender">
+            <!-- 性別に何も入れず送信すると、「全て」表示になってしまう（全てではあるので良い気はするが…） -->
+            <option value="" selected>性別</option>
+            <option value="" {{old('gender')=='' ? 'selected' : '' }}>全て</option>
+            <option value="1" {{old('gender')=='1' ? 'selected' : '' }}>男性</option>
+            <option value="2" {{old('gender')=='2' ? 'selected' : '' }}>女性</option>
+            <option value="3" {{old('gender')=='3' ? 'selected' : '' }}>その他</option>
+        </select>
+        <select name="content">
+            <option value="" selected>お問い合わせの種類</option>
+            <option value="1" {{old('content')=='1' ? 'selected' : '' }}>商品のお届けについて</option>
+            <option value="2" {{old('content')=='2' ? 'selected' : '' }}>商品の交換について</option>
+            <option value="3" {{old('content')=='3' ? 'selected' : '' }}>商品トラブル</option>
+            <option value="4" {{old('content')=='4' ? 'selected' : '' }}>ショップへのお問い合わせ</option>
+            <option value="5" {{old('content')=='5' ? 'selected' : '' }}>その他</option>
+        </select>
+        <input type="date" name="date" value="{{old('date') }}">
+        <input type="submit" value="検索">
     </form>
-    @if (@isset($item)) -->
-    <form action="find" method="POST">
-        @csrf
-        <input type="text" name="input" value="{{$input ?? ''}}">
-        <input type="submit" value="見つける">
-    </form>
-    {{ $items->links() }}
+
     <div class="table">
         <table>
             <tr>
@@ -73,12 +70,12 @@
                 <td> {{$item->last_name}}　{{$item->first_name}} </td>
                 <td> {{$item->gender}} </td>
                 <td> {{$item->email}} </td>
-                <td> {{$item->category_id}} </td>
+                <td> {{$item->category->content}} </td>
             </tr>
             @endforeach
         </table>
     </div>
-    <!-- @endif -->
+
 </div>
 
 @endsection

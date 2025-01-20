@@ -20,10 +20,10 @@ class Contact extends Model
         'detail'
     ];
 
-    // public function category()
-    // {
-    //     return $this->belongsTo(category::class);
-    // }
+    public function category()
+    {
+        return $this->belongsTo(category::class);
+    }
 
 }
 
